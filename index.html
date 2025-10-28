@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Quote Comparison</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa; /* Light grey background */
+        }
+        .sidebar {
+            background-color: #ffffff;
+        }
+        .main-content {
+            background-color: #f8f9fa;
+        }
+        .highlight {
+            background-color: #fff1e6; /* Peach/Orange accent */
+            border-left: 2px solid #ff8c3c;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ff8c3c;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Custom scrollbar for textareas */
+        textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 10px;
+        }
+        textarea::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
+</head>
+<body class="flex h-screen antialiased text-gray-800">
+    <!-- Static Sidebar -->
+    <aside class="sidebar w-64 flex-shrink-0 border-r border-gray-200 hidden md:flex flex-col">
+        <div class="h-16 flex items-center px-6 border-b border-gray-200">
+            <h1 class="text-xl font-bold tracking-wider text-gray-800">BOLD PENGUIN</h1>
+        </div>
+        <nav class="flex-1 px-4 py-6 space-y-2">
+            <a href="#" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg> Home
+            </a>
+            <a href="#" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> New Application
+            </a>
+            <a href="#" class="highlight flex items-center px-4 py-2 text-gray-700 font-semibold rounded-md">
+                <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg> Opportunities
+            </a>
+            <a href="#" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg> Quotes
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <header class="h-16 flex items-center justify-between px-6 border-b border-gray-200 bg-white">
+            <div class="flex items-center">
+                <button class="md:hidden mr-4">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <p class="text-sm text-gray-500">
+                    Handyman Construction &nbsp;/&nbsp; 4/1/2025 Renewal &nbsp;/&nbsp; <span class="font-semibold text-gray-700">Quote Comparison</span>
+                </p>
+            </div>
+            <div class="flex items-center">
+                 <p class="font-semibold">Penny Humboldt</p>
+                 <span class="ml-2 inline-flex items-center justify-center h-8 w-8 rounded-full bg-pink-500 text-white font-bold">PH</span>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-4 md:p-8">
+            <div class="max-w-7xl mx-auto">
+                
+                <!-- API Key Input -->
+                <!-- This section has been removed -->
+
+                <!-- Quote Input Section -->
+                <div id="inputSection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <textarea id="quote1" class="w-full h-64 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Paste Carrier Quote 1 Payload..."></textarea>
+                    <textarea id="quote2" class="w-full h-64 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Paste Carrier Quote 2 Payload..."></textarea>
+                    <textarea id="quote3" class="w-full h-64 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Paste Carrier Quote 3 Payload..."></textarea>
+                    <textarea id="quote4" class="w-full h-64 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Paste Carrier Quote 4 Payload..."></textarea>
+                </div>
+
+                <div class="flex items-center justify-center space-x-4 mb-8">
+                    <button id="compareBtn" class="px-6 py-2 bg-orange-500 text-white font-semibold rounded-lg shadow-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200">
+                        Compare Quotes
+                    </button>
+                    <button id="clearBtn" class="px-6 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg shadow-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors duration-200">
+                        Clear All
+                    </button>
+                </div>
+
+                <!-- Output Section -->
+                <div id="outputSection" class="hidden">
+                     <!-- Summary -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm mb-8 border border-gray-200">
+                         <h2 class="text-lg font-semibold text-gray-800 mb-2">Summary</h2>
+                         <p id="summaryText" class="text-gray-600 leading-relaxed"></p>
+                    </div>
+
+                    <!-- Comparison Table -->
+                    <div id="comparisonTableContainer" class="bg-white rounded-lg shadow-sm overflow-x-auto border border-gray-200">
+                         <!-- This table will be populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Loader -->
+                <div id="loader" class="hidden justify-center items-center py-10">
+                    <div class="loader"></div>
+                    <p class="ml-4 text-gray-600 font-semibold">Analyzing quotes, please wait...</p>
+                </div>
+
+                 <!-- Error Message -->
+                <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative" role="alert">
+                    <strong class="font-bold">Error:</strong>
+                    <span id="errorText" class="block sm:inline"></span>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const compareBtn = document.getElementById('compareBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const loader = document.getElementById('loader');
+        const outputSection = document.getElementById('outputSection');
+        const inputSection = document.getElementById('inputSection');
+        const summaryText = document.getElementById('summaryText');
+        const comparisonTableContainer = document.getElementById('comparisonTableContainer');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        // The apiKeyInput is no longer needed
+        // const apiKeyInput = document.getElementById('apiKey');
+
+        const quoteTextareas = [
+            document.getElementById('quote1'),
+            document.getElementById('quote2'),
+            document.getElementById('quote3'),
+            document.getElementById('quote4'),
+        ];
+
+        clearBtn.addEventListener('click', () => {
+            quoteTextareas.forEach(textarea => textarea.value = '');
+            outputSection.classList.add('hidden');
+            inputSection.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+            comparisonTableContainer.innerHTML = '';
+            summaryText.textContent = '';
+        });
+
+        compareBtn.addEventListener('click', async () => {
+            // TODO: Replace "YOUR_API_KEY_HERE" with your actual Gemini API key
+                const apiKey = "YOUR_API_KEY_HERE";
+            if (apiKey === "YOUR_API_KEY_HERE") {
+                showError("Please replace 'YOUR_API_KEY_HERE' with your actual Gemini API key in the script.");
+                return;
+            }
+
+            const quotes = quoteTextareas
+                .map((textarea, index) => ({
+                    id: index + 1,
+                    content: textarea.value.trim()
+                }))
+                .filter(quote => quote.content);
+
+            if (quotes.length === 0) {
+                showError("Please enter at least one quote payload to compare.");
+                return;
+            }
+            
+            // Hide inputs/outputs, show loader
+            outputSection.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+            loader.style.display = 'flex';
+
+            const userPrompt = `You are a commercial insurance agent. I will provide quote payloads from carriers. Please provide a summary of the respective quotes comparing the coverages, limits, deductibles, and any exclusions. Bring in your knowledge of the carriers, considering their reputation, their servicing, and anything else that will be important for the user to decide on a quote to proceed with. Provide a 3-5 sentence summary of this information and a potential path forward. You are not allowed to recommend anything, but provide information to help the user determine their own course of action.`;
+
+            let fullPrompt = `${userPrompt}\n\nHere are the quote payloads:\n\n`;
+            quotes.forEach(quote => {
+                fullPrompt += `--- Quote ${quote.id} ---\n${quote.content}\n\n`;
+            });
+            
+            fullPrompt += `
+                Now, please provide the comparison. I need the output in a specific JSON format. The format should be:
+                {
+                  "summary": "A 3-5 sentence summary of the comparison, carrier reputation, and a potential path forward.",
+                  "quotes": [
+                    {
+                      "carrierName": "Carrier Name (e.g., Travelers, Hiscox)",
+                      "logoUrl": "URL to a carrier logo if you can find one, otherwise leave empty",
+                      "product": "the name of the insurance product",
+                      "Coverage A": "$1,000,000",
+                      "aggregateLimit": "$2,000,000",
+                      "productsCompletedOpsLimit": "$2,000,000",
+                      "damagesToPremises": "Not specified",
+                      "medicalExpense": "$5,000",
+                      "propertyDeductible": "$250",
+                      "quoteStatus": "Quoted and bindable",
+                      "annualPremium": "$305"
+                    }
+                  ]
+                }
+
+                Only include objects in the 'quotes' array for the payloads that were actually provided. Do not include objects that are not part of the payloads provided. If a value is not found in the payload, represent it as "Not specified". Only include limits and deductibles if at least one of the carrier has an amount for that coverage specified. For dollar amounts, format them with commas (e.g., $1,000,000). The carrierName should be the proper name of the company.`;
+
+            try {
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                
+                const payload = {
+                    contents: [{ parts: [{ text: fullPrompt }] }],
+                };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+
+                if (!response.ok) {
+                    const errorBody = await response.json();
+                    throw new Error(`API Error: ${response.status} ${response.statusText}. ${errorBody?.error?.message || ''}`);
+                }
+
+                const result = await response.json();
+                const textResponse = result.candidates[0].content.parts[0].text;
+
+                // Clean the response to get valid JSON
+                const jsonString = textResponse.match(/```json\n([\s\S]*?)\n```/)[1];
+                const data = JSON.parse(jsonString);
+
+                displayResults(data);
+
+            } catch (error) {
+                console.error('Error fetching from Gemini API:', error);
+                showError(`Failed to analyze quotes. Please check the console for details. Error: ${error.message}`);
+            } finally {
+                loader.style.display = 'none';
+            }
+        });
+
+        function displayResults(data) {
+            summaryText.textContent = data.summary;
+
+            const tableRows = [
+                { key: 'product', label: 'Product' },
+                { key: 'perOccurrenceLimit', label: 'Per Occurrence Limit' },
+                { key: 'aggregateLimit', label: 'Aggregate Limit' },
+                { key: 'productsCompletedOpsLimit', label: 'Products/Completed Operations Aggregate Limit' },
+                { key: 'damagesToPremises', label: 'Damages to premises rented to you' },
+                { key: 'medicalExpense', label: 'Medical expense limit' },
+                { key: 'propertyDeductible', label: 'GL Property Damage Deductible' },
+                { key: 'quoteStatus', label: 'Quote Status' },
+                { key: 'annualPremium', label: 'Annual Premium' },
+            ];
+            
+            let tableHTML = `
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-1/4">
+                                Quote Summary
+                            </th>
+            `;
+
+            data.quotes.forEach(quote => {
+                tableHTML += `
+                    <th scope="col" class="px-6 py-4 text-center text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        <img src="https://logo.clearbit.com/${quote.carrierName.toLowerCase().replace(/\s+/g, '')}.com" 
+                             onerror="this.onerror=null;this.style.display='none'" 
+                             class="h-6 mx-auto mb-2" alt="${quote.carrierName} Logo">
+                        ${quote.carrierName}
+                        <button class="block mx-auto mt-2 px-4 py-1 text-sm bg-gray-200 text-gray-700 font-semibold rounded-md hover:bg-gray-300">View Quote</button>
+                    </th>
+                `;
+            });
+            
+            tableHTML += `</tr></thead><tbody class="bg-white divide-y divide-gray-200">`;
+
+            tableRows.forEach(row => {
+                const isPremiumRow = row.key === 'annualPremium';
+                tableHTML += `<tr class="${isPremiumRow ? 'bg-orange-50' : ''}">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium ${isPremiumRow ? 'text-orange-900' : 'text-gray-900'}">
+                                    ${row.label}
+                                </td>`;
+                data.quotes.forEach(quote => {
+                    tableHTML += `<td class="px-6 py-4 whitespace-nowrap text-sm text-center ${isPremiumRow ? 'font-bold text-orange-900 text-base' : 'text-gray-600'}">
+                                    ${quote[row.key] || 'Not specified'}
+                                  </td>`;
+                });
+                tableHTML += `</tr>`;
+            });
+
+            tableHTML += `</tbody></table>`;
+            comparisonTableContainer.innerHTML = tableHTML;
+            outputSection.classList.remove('hidden');
+        }
+
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.classList.remove('hidden');
+            loader.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
+
