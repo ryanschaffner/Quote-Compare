@@ -53,7 +53,6 @@
     </style>
 </head>
 <body class="flex h-screen antialiased text-gray-800">
-    <!-- Static Sidebar -->
     <aside class="sidebar w-64 flex-shrink-0 border-r border-gray-200 hidden md:flex flex-col">
         <div class="h-16 flex items-center px-6 border-b border-gray-200">
             <h1 class="text-xl font-bold tracking-wider text-gray-800">BOLD PENGUIN</h1>
@@ -74,7 +73,6 @@
         </nav>
     </aside>
 
-    <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
         <header class="h-16 flex items-center justify-between px-6 border-b border-gray-200 bg-white">
             <div class="flex items-center">
@@ -96,27 +94,18 @@
         <main class="flex-1 overflow-y-auto p-4 md:p-8">
             <div class="max-w-7xl mx-auto">
                 
-                <!-- API Key Input -->
-                <!-- This section has been removed -->
+                <div class="bg-white p-4 rounded-lg shadow-sm mb-6 border border-gray-200">
+                    <label for="apiKey" class="block text-sm font-medium text-gray-700 mb-2">
+                        Enter Your Gemini API Key
+                    </label>
+                    <input type="password" id="apiKey" 
+                           class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
+                           placeholder="Paste your API key here (it's not saved)">
+                    <p class="text-xs text-gray-500 mt-2">
+                        Your key is used only in your browser and is never sent to any server.
+                    </p>
+                </div>
 
-                <div class="max-w-7xl mx-auto">
-    
-    <div class="bg-white p-4 rounded-lg shadow-sm mb-6 border border-gray-200">
-        <label for="apiKey" class="block text-sm font-medium text-gray-700 mb-2">
-            Enter Your Gemini API Key
-        </label>
-        <input type="password" id="apiKey" 
-               class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500" 
-               placeholder="Paste your API key here (it's not saved)">
-        <p class="text-xs text-gray-500 mt-2">
-            Your key is used only in your browser and is never sent to our server.
-        </p>
-    </div>
-
-    <div id="inputSection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-    ```
-
-                <!-- Quote Input Section -->
                 <div id="inputSection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                     <textarea id="quote1" class="w-full h-64 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Paste Carrier Quote 1 Payload..."></textarea>
                     <textarea id="quote2" class="w-full h-64 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Paste Carrier Quote 2 Payload..."></textarea>
@@ -133,28 +122,22 @@
                     </button>
                 </div>
 
-                <!-- Output Section -->
                 <div id="outputSection" class="hidden">
-                     <!-- Summary -->
-                    <div class="bg-white p-6 rounded-lg shadow-sm mb-8 border border-gray-200">
+                     <div class="bg-white p-6 rounded-lg shadow-sm mb-8 border border-gray-200">
                          <h2 class="text-lg font-semibold text-gray-800 mb-2">Summary</h2>
                          <p id="summaryText" class="text-gray-600 leading-relaxed"></p>
                     </div>
 
-                    <!-- Comparison Table -->
                     <div id="comparisonTableContainer" class="bg-white rounded-lg shadow-sm overflow-x-auto border border-gray-200">
-                         <!-- This table will be populated dynamically -->
-                    </div>
+                         </div>
                 </div>
 
-                <!-- Loader -->
                 <div id="loader" class="hidden justify-center items-center py-10">
                     <div class="loader"></div>
                     <p class="ml-4 text-gray-600 font-semibold">Analyzing quotes, please wait...</p>
                 </div>
 
-                 <!-- Error Message -->
-                <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative" role="alert">
+                 <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative" role="alert">
                     <strong class="font-bold">Error:</strong>
                     <span id="errorText" class="block sm:inline"></span>
                 </div>
@@ -173,19 +156,31 @@
         const comparisonTableContainer = document.getElementById('comparisonTableContainer');
         const errorMessage = document.getElementById('errorMessage');
         const errorText = document.getElementById('errorText');
-        // This is now needed!
-        const apiKeyInput = document.getElementById('apiKey'); 
+        // This is now the API key input field
+        const apiKeyInput = document.getElementById('apiKey');
 
         const quoteTextareas = [
-        //...
+            document.getElementById('quote1'),
+            document.getElementById('quote2'),
+            document.getElementById('quote3'),
+            document.getElementById('quote4'),
         ];
-        
-        // ...
-        
+
+        clearBtn.addEventListener('click', () => {
+            quoteTextareas.forEach(textarea => textarea.value = '');
+            outputSection.classList.add('hidden');
+            inputSection.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+            comparisonTableContainer.innerHTML = '';
+            summaryText.textContent = '';
+            // Don't clear the API key, the user might want to re-use it
+            // apiKeyInput.value = '';
+        });
+
         compareBtn.addEventListener('click', async () => {
             // Read the key from the input field
-            const apiKey = apiKeyInput.value.trim(); 
-            
+            const apiKey = apiKeyInput.value.trim();
+
             // Check if the key was provided
             if (!apiKey) {
                 showError("Please enter your Gemini API key in the input field above.");
